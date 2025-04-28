@@ -5,10 +5,10 @@
 		"factoryName": {
 			"value": "datapipeline213"
 		},
-		"ProductDb_password": {
+		"BlobStorageProducts_connectionString": {
 			"value": ""
 		},
-		"BlobStorageProducts_connectionString": {
+		"ProductDb_password": {
 			"value": ""
 		},
 		"ProductDb_properties_typeProperties_server": {

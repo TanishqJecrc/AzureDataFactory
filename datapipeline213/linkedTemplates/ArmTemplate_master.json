@@ -7,13 +7,13 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "datapipeline213"
 		},
-		"ProductDb_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'ProductDb'"
-		},
 		"BlobStorageProducts_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'BlobStorageProducts'"
+		},
+		"ProductDb_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ProductDb'"
 		},
 		"ProductDb_properties_typeProperties_server": {
 			"type": "string",
@@ -54,11 +54,11 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"ProductDb_password": {
-						"value": "[parameters('ProductDb_password')]"
-					},
 					"BlobStorageProducts_connectionString": {
 						"value": "[parameters('BlobStorageProducts_connectionString')]"
+					},
+					"ProductDb_password": {
+						"value": "[parameters('ProductDb_password')]"
 					},
 					"ProductDb_properties_typeProperties_server": {
 						"value": "[parameters('ProductDb_properties_typeProperties_server')]"

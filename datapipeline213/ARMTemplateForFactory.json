@@ -140,6 +140,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": "ProductList",
 						"container": "products"
 					},
 					"columnDelimiter": ",",

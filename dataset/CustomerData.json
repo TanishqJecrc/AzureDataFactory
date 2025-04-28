@@ -1,0 +1,19 @@
+{
+	"name": "CustomerData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BlobStorageProducts",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Customer.json",
+				"container": "products"
+			}
+		},
+		"schema": {}
+	}
+}

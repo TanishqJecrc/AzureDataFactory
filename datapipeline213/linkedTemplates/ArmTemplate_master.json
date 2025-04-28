@@ -7,6 +7,26 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "datapipeline213"
 		},
+		"ProductDb_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ProductDb'"
+		},
+		"BlobStorageProducts_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'BlobStorageProducts'"
+		},
+		"ProductDb_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlservertanishq.database.windows.net"
+		},
+		"ProductDb_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqlservertanishq"
+		},
+		"ProductDb_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "tanishq"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -33,6 +53,21 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"ProductDb_password": {
+						"value": "[parameters('ProductDb_password')]"
+					},
+					"BlobStorageProducts_connectionString": {
+						"value": "[parameters('BlobStorageProducts_connectionString')]"
+					},
+					"ProductDb_properties_typeProperties_server": {
+						"value": "[parameters('ProductDb_properties_typeProperties_server')]"
+					},
+					"ProductDb_properties_typeProperties_database": {
+						"value": "[parameters('ProductDb_properties_typeProperties_database')]"
+					},
+					"ProductDb_properties_typeProperties_userName": {
+						"value": "[parameters('ProductDb_properties_typeProperties_userName')]"
 					}
 				}
 			},

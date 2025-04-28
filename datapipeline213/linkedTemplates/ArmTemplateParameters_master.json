@@ -5,6 +5,21 @@
 		"factoryName": {
 			"value": "datapipeline213"
 		},
+		"ProductDb_password": {
+			"value": ""
+		},
+		"BlobStorageProducts_connectionString": {
+			"value": ""
+		},
+		"ProductDb_properties_typeProperties_server": {
+			"value": "sqlservertanishq.database.windows.net"
+		},
+		"ProductDb_properties_typeProperties_database": {
+			"value": "sqlservertanishq"
+		},
+		"ProductDb_properties_typeProperties_userName": {
+			"value": "tanishq"
+		},
 		"containerUri": {
 			"value": ""
 		},

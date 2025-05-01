@@ -51,7 +51,7 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> ProductStreamIn",
-				"ProductStreamIn derive(CalculatedMarkup = ListPrice/StandardCost) ~> CalculatedMarkup",
+				"ProductStreamIn derive(Markup = StandardCost/ListPrice) ~> CalculatedMarkup",
 				"CalculatedMarkup sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",

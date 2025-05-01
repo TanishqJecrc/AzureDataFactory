@@ -14,7 +14,11 @@
 			],
 			"sinks": [
 				{
-					"name": "sink1"
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					},
+					"name": "MoviesStreamOut"
 				}
 			],
 			"transformations": [
@@ -22,7 +26,7 @@
 					"name": "FilterYears"
 				},
 				{
-					"name": "aggregate1"
+					"name": "AggregateComedyRating"
 				}
 			],
 			"scriptLines": [
@@ -38,11 +42,31 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> MoviesStreamIn",
 				"MoviesStreamIn filter(toInteger(year) >= 1910 && toInteger(year) <= 2000) ~> FilterYears",
-				"FilterYears aggregate() ~> aggregate1",
-				"aggregate1 sink(allowSchemaDrift: true,",
+				"FilterYears aggregate(groupBy(year),",
+				"     AverageComedyRating = avg(toInteger(Rating))) ~> AggregateComedyRating",
+				"AggregateComedyRating sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          ProductID as string,",
+				"          Name as string,",
+				"          ProductNumber as string,",
+				"          Color as string,",
+				"          StandardCost as string,",
+				"          ListPrice as string,",
+				"          Size as string,",
+				"          Weight as string,",
+				"          ProductCategoryID as string,",
+				"          ProductModelID as string,",
+				"          SellStartDate as string,",
+				"          SellEndDate as string,",
+				"          DiscontinuedDate as string,",
+				"          ThumbNailPhoto as string,",
+				"          ThumbnailPhotoFileName as string,",
+				"          rowguid as string,",
+				"          ModifiedDate as string",
+				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> MoviesStreamOut"
 			]
 		}
 	}

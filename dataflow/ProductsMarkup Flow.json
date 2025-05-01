@@ -9,11 +9,24 @@
 						"referenceName": "ProductsTable",
 						"type": "DatasetReference"
 					},
-					"name": "ProductStream"
+					"name": "ProductStreamIn"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ProductMarkupJson",
+						"type": "DatasetReference"
+					},
+					"name": "ProductSteamOut",
+					"description": "Export data to ProductMarkupJson"
+				}
+			],
+			"transformations": [
+				{
+					"name": "CalculatedMarkup"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          ProductID as integer,",
@@ -37,7 +50,26 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> ProductStream"
+				"     format: 'table') ~> ProductStreamIn",
+				"ProductStreamIn derive(ProductID = ERROR_FUNCTION(''),",
+				"          Name = ERROR_FUNCTION(''),",
+				"          ProductNumber = ERROR_FUNCTION(''),",
+				"          Color = ERROR_FUNCTION(''),",
+				"          StandardCost = ERROR_FUNCTION(''),",
+				"          ListPrice = ERROR_FUNCTION(''),",
+				"          Size = ERROR_FUNCTION(''),",
+				"          Weight = ERROR_FUNCTION(''),",
+				"          ProductCategoryID = ERROR_FUNCTION(''),",
+				"          ProductModelID = ERROR_FUNCTION(''),",
+				"          SellStartDate = ERROR_FUNCTION(''),",
+				"          SellEndDate = ERROR_FUNCTION(''),",
+				"          DiscontinuedDate = ERROR_FUNCTION(''),",
+				"          ModifiedDate = ERROR_FUNCTION(''),",
+				"          CalculatedMarkup = ListPrice/StandardCost) ~> CalculatedMarkup",
+				"CalculatedMarkup sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ProductSteamOut"
 			]
 		}
 	}

@@ -71,7 +71,7 @@
 				}
 			},
 			{
-				"name": "StoredProcedure Products",
+				"name": "SP Update ModifiedDate",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{

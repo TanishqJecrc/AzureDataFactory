@@ -1,5 +1,5 @@
 {
-	"name": "7 Taxi Scenario Pipeline",
+	"name": "7 Taxi Scenario Data Share Pipeline",
 	"properties": {
 		"activities": [
 			{

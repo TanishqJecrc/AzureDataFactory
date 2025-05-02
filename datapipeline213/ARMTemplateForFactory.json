@@ -428,7 +428,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/7 Taxi Scenario Data Share Pipeline')]",
+			"name": "[concat(parameters('factoryName'), '/7 Taxi Scenario Pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -486,6 +486,44 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "Taxi Data Flow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "TaxiDataCopy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "TaxiDataFlow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ADLSStreamIn": {},
+									"SQLStreamIn": {},
+									"BlobStreamOut": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
 					}
 				],
 				"policy": {
@@ -495,7 +533,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable2')]",
-				"[concat(variables('factoryId'), '/datasets/TaxiCSV')]"
+				"[concat(variables('factoryId'), '/datasets/TaxiCSV')]",
+				"[concat(variables('factoryId'), '/dataflows/TaxiDataFlow')]"
 			]
 		},
 		{
@@ -1235,7 +1274,64 @@
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "medallion",
+						"type": "String"
+					},
+					{
+						"name": "hack_license",
+						"type": "String"
+					},
+					{
+						"name": "vendor_id",
+						"type": "String"
+					},
+					{
+						"name": "rate_code",
+						"type": "String"
+					},
+					{
+						"name": "store_and_fwd_flag",
+						"type": "String"
+					},
+					{
+						"name": "pickup_datetime",
+						"type": "String"
+					},
+					{
+						"name": "dropoff_datetime",
+						"type": "String"
+					},
+					{
+						"name": "passenger_count",
+						"type": "String"
+					},
+					{
+						"name": "trip_time_in_secs",
+						"type": "String"
+					},
+					{
+						"name": "trip_distance",
+						"type": "String"
+					},
+					{
+						"name": "pickup_longitude",
+						"type": "String"
+					},
+					{
+						"name": "pickup_latitude",
+						"type": "String"
+					},
+					{
+						"name": "dropoff_longitude",
+						"type": "String"
+					},
+					{
+						"name": "dropoff_latitude",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADLS Taxi')]"
@@ -1537,14 +1633,30 @@
 					],
 					"transformations": [
 						{
-							"name": "JoinStream"
+							"name": "InnerJoinTripDataStream"
 						},
 						{
 							"name": "aggregatePaymentType"
 						}
 					],
 					"scriptLines": [
-						"source(allowSchemaDrift: true,",
+						"source(output(",
+						"          medallion as string,",
+						"          hack_license as string,",
+						"          vendor_id as string,",
+						"          rate_code as string,",
+						"          store_and_fwd_flag as string,",
+						"          pickup_datetime as string,",
+						"          dropoff_datetime as string,",
+						"          passenger_count as string,",
+						"          trip_time_in_secs as string,",
+						"          trip_distance as string,",
+						"          pickup_longitude as string,",
+						"          pickup_latitude as string,",
+						"          dropoff_longitude as string,",
+						"          dropoff_latitude as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> ADLSStreamIn",
 						"source(output(",
@@ -1564,13 +1676,17 @@
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
 						"     format: 'table') ~> SQLStreamIn",
-						"ADLSStreamIn, SQLStreamIn join(medallion == medallion,",
+						"ADLSStreamIn, SQLStreamIn join(ADLSStreamIn@medallion == SQLStreamIn@medallion",
+						"     && ADLSStreamIn@hack_license == SQLStreamIn@hack_license",
+						"     && ADLSStreamIn@vendor_id == SQLStreamIn@vendor_id",
+						"     && ADLSStreamIn@pickup_datetime == SQLStreamIn@pickup_datetime,",
 						"     joinType:'inner',",
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> JoinStream",
-						"JoinStream aggregate(groupBy(payment_type),",
-						"     {Average Fare} = avg(toInteger(total_amount))) ~> aggregatePaymentType",
+						"     broadcast: 'auto')~> InnerJoinTripDataStream",
+						"InnerJoinTripDataStream aggregate(groupBy(payment_type),",
+						"     {Average Fare} = avg(toInteger(total_amount)),",
+						"          {Total Trip Distance} = sum(toInteger(trip_distance))) ~> aggregatePaymentType",
 						"aggregatePaymentType sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     umask: 0022,",
@@ -1585,6 +1701,53 @@
 				"[concat(variables('factoryId'), '/datasets/TaxiDataCSV')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable3')]",
 				"[concat(variables('factoryId'), '/datasets/AggregatedTaxiData')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/7_2 Taxi Scenario ETL Pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Taxi Data Flow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "TaxiDataFlow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ADLSStreamIn": {},
+									"SQLStreamIn": {},
+									"BlobStreamOut": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/TaxiDataFlow')]"
 			]
 		}
 	]

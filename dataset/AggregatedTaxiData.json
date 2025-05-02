@@ -1,5 +1,5 @@
 {
-	"name": "FinalTaxiData",
+	"name": "AggregatedTaxiData",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ADLS Taxi",

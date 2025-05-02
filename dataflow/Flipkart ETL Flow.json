@@ -12,13 +12,21 @@
 					"name": "DataStreamIn"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "FlipkartETL",
+						"type": "DatasetReference"
+					},
+					"name": "DataStreamOut"
+				}
+			],
 			"transformations": [
 				{
 					"name": "FilterData"
 				},
 				{
-					"name": "derivedColumn1"
+					"name": "DerivedColumn"
 				}
 			],
 			"scriptLines": [
@@ -42,7 +50,13 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> DataStreamIn",
 				"DataStreamIn filter(norating1<10 || noreviews1<10) ~> FilterData",
-				"FilterData derive() ~> derivedColumn1"
+				"FilterData derive(positive_review_ratio = (toFloat(star_5f))/(toFloat(norating1)),",
+				"          total_stars = toDouble(star_1f)+toDouble(star_2f)+toDouble(star_3f)+toDouble(star_4f)+toDouble(star_5f)) ~> DerivedColumn",
+				"DerivedColumn sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DataStreamOut"
 			]
 		}
 	}

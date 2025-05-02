@@ -7,7 +7,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "TaxiDataCopy",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -23,7 +23,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow1",
+						"referenceName": "TaxiDataFlow",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -34,7 +34,7 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "TaxiDataCopy",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {

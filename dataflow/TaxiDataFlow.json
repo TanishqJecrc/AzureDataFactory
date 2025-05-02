@@ -21,6 +21,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "AggregatedTaxiData",
+						"type": "DatasetReference"
+					},
 					"name": "BlobStreamOut"
 				}
 			],
@@ -53,14 +57,18 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> SQLStreamIn",
-				"ADLSStreamIn, SQLStreamIn join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"ADLSStreamIn, SQLStreamIn join(medallion == medallion,",
 				"     joinType:'outer',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> JoinStream",
-				"JoinStream aggregate() ~> aggregatePaymentType",
+				"JoinStream aggregate(groupBy(payment_type),",
+				"     {} = ERROR_FUNCTION('')) ~> aggregatePaymentType",
 				"aggregatePaymentType sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> BlobStreamOut"
 			]

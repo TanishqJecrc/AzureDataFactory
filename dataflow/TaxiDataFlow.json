@@ -30,7 +30,7 @@
 			],
 			"transformations": [
 				{
-					"name": "JoinStream"
+					"name": "InnerJoinTripDataStream"
 				},
 				{
 					"name": "aggregatePaymentType"
@@ -73,12 +73,12 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> SQLStreamIn",
-				"ADLSStreamIn, SQLStreamIn join(ERROR_FUNCTION('') == SQLStreamIn@medallion,",
+				"ADLSStreamIn, SQLStreamIn join(ADLSStreamIn@medallion == SQLStreamIn@medallion,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> JoinStream",
-				"JoinStream aggregate(groupBy(payment_type),",
+				"     broadcast: 'auto')~> InnerJoinTripDataStream",
+				"InnerJoinTripDataStream aggregate(groupBy(payment_type),",
 				"     {Average Fare} = avg(toInteger(total_amount)),",
 				"          {Total Trip Distance} = sum(toInteger(trip_distance))) ~> aggregatePaymentType",
 				"aggregatePaymentType sink(allowSchemaDrift: true,",

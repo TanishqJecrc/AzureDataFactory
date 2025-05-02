@@ -1,5 +1,5 @@
 {
-	"name": "CopyFromBlobToSQLPipeline",
+	"name": "9 CopyFromBlobToSQLPipeline",
 	"properties": {
 		"activities": [
 			{

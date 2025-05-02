@@ -13,7 +13,7 @@
 			],
 			"sinks": [
 				{
-					"name": "sink1"
+					"name": "BlobStreamOut"
 				}
 			],
 			"transformations": [
@@ -21,7 +21,7 @@
 					"name": "JoinStream"
 				},
 				{
-					"name": "aggregate1"
+					"name": "aggregatePaymentType"
 				}
 			],
 			"scriptLines": [
@@ -34,11 +34,11 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> JoinStream",
-				"JoinStream aggregate() ~> aggregate1",
-				"aggregate1 sink(allowSchemaDrift: true,",
+				"JoinStream aggregate() ~> aggregatePaymentType",
+				"aggregatePaymentType sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> BlobStreamOut"
 			]
 		}
 	}

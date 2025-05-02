@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "datapipeline213"
 		},
+		"ADLS Taxi_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLS Taxi'"
+		},
 		"BlobStorageProducts_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'BlobStorageProducts'"
@@ -14,6 +18,14 @@
 		"ProductDb_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ProductDb'"
+		},
+		"Taxidb_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Taxidb'"
+		},
+		"ADLS Taxi_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://azureadlspipeline.dfs.core.windows.net/"
 		},
 		"ProductDb_properties_typeProperties_server": {
 			"type": "string",
@@ -24,6 +36,18 @@
 			"defaultValue": "sqlservertanishq"
 		},
 		"ProductDb_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "tanishq"
+		},
+		"Taxidb_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlservertanishq.database.windows.net"
+		},
+		"Taxidb_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "taxi-data321"
+		},
+		"Taxidb_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "tanishq"
 		},
@@ -54,11 +78,20 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"ADLS Taxi_accountKey": {
+						"value": "[parameters('ADLS Taxi_accountKey')]"
+					},
 					"BlobStorageProducts_connectionString": {
 						"value": "[parameters('BlobStorageProducts_connectionString')]"
 					},
 					"ProductDb_password": {
 						"value": "[parameters('ProductDb_password')]"
+					},
+					"Taxidb_password": {
+						"value": "[parameters('Taxidb_password')]"
+					},
+					"ADLS Taxi_properties_typeProperties_url": {
+						"value": "[parameters('ADLS Taxi_properties_typeProperties_url')]"
 					},
 					"ProductDb_properties_typeProperties_server": {
 						"value": "[parameters('ProductDb_properties_typeProperties_server')]"
@@ -68,10 +101,39 @@
 					},
 					"ProductDb_properties_typeProperties_userName": {
 						"value": "[parameters('ProductDb_properties_typeProperties_userName')]"
+					},
+					"Taxidb_properties_typeProperties_server": {
+						"value": "[parameters('Taxidb_properties_typeProperties_server')]"
+					},
+					"Taxidb_properties_typeProperties_database": {
+						"value": "[parameters('Taxidb_properties_typeProperties_database')]"
+					},
+					"Taxidb_properties_typeProperties_userName": {
+						"value": "[parameters('Taxidb_properties_typeProperties_userName')]"
 					}
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "datapipeline213_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'datapipeline213_ArmTemplate_0')]"
+			]
 		}
 	]
 }

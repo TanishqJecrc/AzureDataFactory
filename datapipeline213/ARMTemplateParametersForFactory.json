@@ -5,11 +5,20 @@
 		"factoryName": {
 			"value": "datapipeline213"
 		},
+		"ADLS Taxi_accountKey": {
+			"value": ""
+		},
 		"BlobStorageProducts_connectionString": {
 			"value": ""
 		},
 		"ProductDb_password": {
 			"value": ""
+		},
+		"Taxidb_password": {
+			"value": ""
+		},
+		"ADLS Taxi_properties_typeProperties_url": {
+			"value": "https://azureadlspipeline.dfs.core.windows.net/"
 		},
 		"ProductDb_properties_typeProperties_server": {
 			"value": "sqlservertanishq.database.windows.net"
@@ -18,6 +27,15 @@
 			"value": "sqlservertanishq"
 		},
 		"ProductDb_properties_typeProperties_userName": {
+			"value": "tanishq"
+		},
+		"Taxidb_properties_typeProperties_server": {
+			"value": "sqlservertanishq.database.windows.net"
+		},
+		"Taxidb_properties_typeProperties_database": {
+			"value": "taxi-data321"
+		},
+		"Taxidb_properties_typeProperties_userName": {
 			"value": "tanishq"
 		}
 	}

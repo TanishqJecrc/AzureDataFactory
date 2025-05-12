@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText4",
+	"name": "SalesOrderOut",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "BlobStorageProducts",

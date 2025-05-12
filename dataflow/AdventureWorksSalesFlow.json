@@ -6,60 +6,65 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "SalesT_Product",
+						"referenceName": "SalesOrderHeader",
 						"type": "DatasetReference"
 					},
-					"name": "FactSalesIn"
+					"name": "SalesOrderStreamIn"
 				},
 				{
 					"dataset": {
 						"referenceName": "SalesLT_Customer",
 						"type": "DatasetReference"
 					},
-					"name": "DimProduct"
+					"name": "CustomerStreamIn"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DelimitedText4",
+						"referenceName": "SalesOrderOut",
 						"type": "DatasetReference"
 					},
-					"name": "FactSalesOut"
+					"name": "SalesOrderOut"
 				}
 			],
 			"transformations": [
 				{
-					"name": "ProductLookup"
+					"name": "OrderLookup"
 				},
 				{
-					"name": "ProductSelect"
+					"name": "OrderSelect"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
-				"          ProductID as integer,",
-				"          Name as string,",
-				"          ProductNumber as string,",
-				"          Color as string,",
-				"          StandardCost as decimal(19,4),",
-				"          ListPrice as decimal(19,4),",
-				"          Size as string,",
-				"          Weight as decimal(8,2),",
-				"          ProductCategoryID as integer,",
-				"          ProductModelID as integer,",
-				"          SellStartDate as timestamp,",
-				"          SellEndDate as timestamp,",
-				"          DiscontinuedDate as timestamp,",
-				"          ThumbNailPhoto as binary,",
-				"          ThumbnailPhotoFileName as string,",
+				"          SalesOrderID as integer,",
+				"          RevisionNumber as integer,",
+				"          OrderDate as timestamp,",
+				"          DueDate as timestamp,",
+				"          ShipDate as timestamp,",
+				"          Status as integer,",
+				"          OnlineOrderFlag as boolean,",
+				"          SalesOrderNumber as string,",
+				"          PurchaseOrderNumber as string,",
+				"          AccountNumber as string,",
+				"          CustomerID as integer,",
+				"          ShipToAddressID as integer,",
+				"          BillToAddressID as integer,",
+				"          ShipMethod as string,",
+				"          CreditCardApprovalCode as string,",
+				"          SubTotal as decimal(19,4),",
+				"          TaxAmt as decimal(19,4),",
+				"          Freight as decimal(19,4),",
+				"          TotalDue as decimal(19,4),",
+				"          Comment as string,",
 				"          rowguid as string,",
 				"          ModifiedDate as timestamp",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> FactSalesIn",
+				"     format: 'table') ~> SalesOrderStreamIn",
 				"source(output(",
 				"          CustomerID as integer,",
 				"          NameStyle as boolean,",
@@ -80,13 +85,36 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> DimProduct",
-				"FactSalesIn, DimProduct lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     format: 'table') ~> CustomerStreamIn",
+				"SalesOrderStreamIn, CustomerStreamIn lookup(SalesOrderStreamIn@CustomerID == CustomerStreamIn@CustomerID,",
 				"     multiple: true,",
-				"     broadcast: 'auto')~> ProductLookup",
-				"ProductLookup select(skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> ProductSelect",
-				"ProductSelect sink(allowSchemaDrift: true,",
+				"     broadcast: 'auto')~> OrderLookup",
+				"OrderLookup select(mapColumn(",
+				"          SalesOrderID,",
+				"          OrderDate,",
+				"          Status,",
+				"          SalesOrderNumber,",
+				"          PurchaseOrderNumber,",
+				"          AccountNumber,",
+				"          CustomerID = SalesOrderStreamIn@CustomerID,",
+				"          SubTotal,",
+				"          TaxAmt,",
+				"          Freight,",
+				"          TotalDue,",
+				"          CustomerID = CustomerStreamIn@CustomerID,",
+				"          NameStyle,",
+				"          Title,",
+				"          FirstName,",
+				"          MiddleName,",
+				"          LastName,",
+				"          CompanyName,",
+				"          SalesPerson,",
+				"          EmailAddress,",
+				"          Phone",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> OrderSelect",
+				"OrderSelect sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          ProductID as string,",
@@ -112,7 +140,7 @@
 				"     mapColumn(",
 				"          each(match(/* All input columns */ true()),",
 				"               /* Input name */ $$ = $$)",
-				"     )) ~> FactSalesOut"
+				"     )) ~> SalesOrderOut"
 			]
 		}
 	}

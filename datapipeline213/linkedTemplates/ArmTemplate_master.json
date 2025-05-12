@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Taxidb'"
 		},
+		"AdventureWorks_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AdventureWorks'"
+		},
 		"ADLS Taxi_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://azureadlspipeline.dfs.core.windows.net/"
@@ -48,6 +52,18 @@
 			"defaultValue": "taxi-data321"
 		},
 		"Taxidb_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "tanishq"
+		},
+		"AdventureWorks_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlservertanishq.database.windows.net"
+		},
+		"AdventureWorks_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "AdventureWorksDW2022"
+		},
+		"AdventureWorks_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "tanishq"
 		},
@@ -90,6 +106,9 @@
 					"Taxidb_password": {
 						"value": "[parameters('Taxidb_password')]"
 					},
+					"AdventureWorks_password": {
+						"value": "[parameters('AdventureWorks_password')]"
+					},
 					"ADLS Taxi_properties_typeProperties_url": {
 						"value": "[parameters('ADLS Taxi_properties_typeProperties_url')]"
 					},
@@ -110,6 +129,15 @@
 					},
 					"Taxidb_properties_typeProperties_userName": {
 						"value": "[parameters('Taxidb_properties_typeProperties_userName')]"
+					},
+					"AdventureWorks_properties_typeProperties_server": {
+						"value": "[parameters('AdventureWorks_properties_typeProperties_server')]"
+					},
+					"AdventureWorks_properties_typeProperties_database": {
+						"value": "[parameters('AdventureWorks_properties_typeProperties_database')]"
+					},
+					"AdventureWorks_properties_typeProperties_userName": {
+						"value": "[parameters('AdventureWorks_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -133,6 +161,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'datapipeline213_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "datapipeline213_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'datapipeline213_ArmTemplate_1')]"
 			]
 		}
 	]

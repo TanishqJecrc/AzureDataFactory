@@ -17,6 +17,9 @@
 		"Taxidb_password": {
 			"value": ""
 		},
+		"AdventureWorks_password": {
+			"value": ""
+		},
 		"ADLS Taxi_properties_typeProperties_url": {
 			"value": "https://azureadlspipeline.dfs.core.windows.net/"
 		},
@@ -36,6 +39,15 @@
 			"value": "taxi-data321"
 		},
 		"Taxidb_properties_typeProperties_userName": {
+			"value": "tanishq"
+		},
+		"AdventureWorks_properties_typeProperties_server": {
+			"value": "sqlservertanishq.database.windows.net"
+		},
+		"AdventureWorks_properties_typeProperties_database": {
+			"value": "AdventureWorksDW2022"
+		},
+		"AdventureWorks_properties_typeProperties_userName": {
 			"value": "tanishq"
 		}
 	}

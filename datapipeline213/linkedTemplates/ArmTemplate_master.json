@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ADLS Taxi'"
 		},
+		"AdventureWorks_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AdventureWorks'"
+		},
 		"BlobStorageProducts_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'BlobStorageProducts'"
@@ -23,13 +27,25 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Taxidb'"
 		},
-		"AdventureWorks_password": {
+		"AzureDatabricks_accessToken": {
 			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'AdventureWorks'"
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks'"
 		},
 		"ADLS Taxi_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://azureadlspipeline.dfs.core.windows.net/"
+		},
+		"AdventureWorks_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlservertanishq.database.windows.net"
+		},
+		"AdventureWorks_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "AdventureWorksDW2022"
+		},
+		"AdventureWorks_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "tanishq"
 		},
 		"ProductDb_properties_typeProperties_server": {
 			"type": "string",
@@ -55,17 +71,9 @@
 			"type": "string",
 			"defaultValue": "tanishq"
 		},
-		"AdventureWorks_properties_typeProperties_server": {
+		"AzureDatabricks_properties_typeProperties_existingClusterId": {
 			"type": "string",
-			"defaultValue": "sqlservertanishq.database.windows.net"
-		},
-		"AdventureWorks_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "AdventureWorksDW2022"
-		},
-		"AdventureWorks_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "tanishq"
+			"defaultValue": "0515-092027-iq3aaygs"
 		},
 		"containerUri": {
 			"type": "string",
@@ -97,6 +105,9 @@
 					"ADLS Taxi_accountKey": {
 						"value": "[parameters('ADLS Taxi_accountKey')]"
 					},
+					"AdventureWorks_password": {
+						"value": "[parameters('AdventureWorks_password')]"
+					},
 					"BlobStorageProducts_connectionString": {
 						"value": "[parameters('BlobStorageProducts_connectionString')]"
 					},
@@ -106,11 +117,20 @@
 					"Taxidb_password": {
 						"value": "[parameters('Taxidb_password')]"
 					},
-					"AdventureWorks_password": {
-						"value": "[parameters('AdventureWorks_password')]"
+					"AzureDatabricks_accessToken": {
+						"value": "[parameters('AzureDatabricks_accessToken')]"
 					},
 					"ADLS Taxi_properties_typeProperties_url": {
 						"value": "[parameters('ADLS Taxi_properties_typeProperties_url')]"
+					},
+					"AdventureWorks_properties_typeProperties_server": {
+						"value": "[parameters('AdventureWorks_properties_typeProperties_server')]"
+					},
+					"AdventureWorks_properties_typeProperties_database": {
+						"value": "[parameters('AdventureWorks_properties_typeProperties_database')]"
+					},
+					"AdventureWorks_properties_typeProperties_userName": {
+						"value": "[parameters('AdventureWorks_properties_typeProperties_userName')]"
 					},
 					"ProductDb_properties_typeProperties_server": {
 						"value": "[parameters('ProductDb_properties_typeProperties_server')]"
@@ -130,14 +150,8 @@
 					"Taxidb_properties_typeProperties_userName": {
 						"value": "[parameters('Taxidb_properties_typeProperties_userName')]"
 					},
-					"AdventureWorks_properties_typeProperties_server": {
-						"value": "[parameters('AdventureWorks_properties_typeProperties_server')]"
-					},
-					"AdventureWorks_properties_typeProperties_database": {
-						"value": "[parameters('AdventureWorks_properties_typeProperties_database')]"
-					},
-					"AdventureWorks_properties_typeProperties_userName": {
-						"value": "[parameters('AdventureWorks_properties_typeProperties_userName')]"
+					"AzureDatabricks_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('AzureDatabricks_properties_typeProperties_existingClusterId')]"
 					}
 				}
 			},

@@ -11,6 +11,9 @@
 		"AdventureWorks_password": {
 			"value": ""
 		},
+		"AzureDatabricks_accessToken": {
+			"value": ""
+		},
 		"BlobStorageProducts_connectionString": {
 			"value": ""
 		},
@@ -18,9 +21,6 @@
 			"value": ""
 		},
 		"Taxidb_password": {
-			"value": ""
-		},
-		"AzureDatabricks_accessToken": {
 			"value": ""
 		},
 		"ADLS Taxi_properties_typeProperties_url": {
@@ -34,6 +34,9 @@
 		},
 		"AdventureWorks_properties_typeProperties_userName": {
 			"value": "tanishq"
+		},
+		"AzureDatabricks_properties_typeProperties_existingClusterId": {
+			"value": "0515-092027-iq3aaygs"
 		},
 		"ProductDb_properties_typeProperties_server": {
 			"value": "sqlservertanishq.database.windows.net"
@@ -52,9 +55,6 @@
 		},
 		"Taxidb_properties_typeProperties_userName": {
 			"value": "tanishq"
-		},
-		"AzureDatabricks_properties_typeProperties_existingClusterId": {
-			"value": "0515-092027-iq3aaygs"
 		}
 	}
 }

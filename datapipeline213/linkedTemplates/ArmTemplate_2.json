@@ -13,6 +13,222 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/AdventureWorksSalesFlow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SalesOrderHeader",
+								"type": "DatasetReference"
+							},
+							"name": "SalesOrderStreamIn"
+						},
+						{
+							"dataset": {
+								"referenceName": "SalesLT_Customer",
+								"type": "DatasetReference"
+							},
+							"name": "CustomerStreamIn"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "SalesOrderOut",
+								"type": "DatasetReference"
+							},
+							"name": "SalesOrderOut"
+						}
+					],
+					"transformations": [
+						{
+							"name": "OrderLookup"
+						},
+						{
+							"name": "OrderSelect"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          SalesOrderID as integer,",
+						"          RevisionNumber as integer,",
+						"          OrderDate as timestamp,",
+						"          DueDate as timestamp,",
+						"          ShipDate as timestamp,",
+						"          Status as integer,",
+						"          OnlineOrderFlag as boolean,",
+						"          SalesOrderNumber as string,",
+						"          PurchaseOrderNumber as string,",
+						"          AccountNumber as string,",
+						"          CustomerID as integer,",
+						"          ShipToAddressID as integer,",
+						"          BillToAddressID as integer,",
+						"          ShipMethod as string,",
+						"          CreditCardApprovalCode as string,",
+						"          SubTotal as decimal(19,4),",
+						"          TaxAmt as decimal(19,4),",
+						"          Freight as decimal(19,4),",
+						"          TotalDue as decimal(19,4),",
+						"          Comment as string,",
+						"          rowguid as string,",
+						"          ModifiedDate as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> SalesOrderStreamIn",
+						"source(output(",
+						"          CustomerID as integer,",
+						"          NameStyle as boolean,",
+						"          Title as string,",
+						"          FirstName as string,",
+						"          MiddleName as string,",
+						"          LastName as string,",
+						"          Suffix as string,",
+						"          CompanyName as string,",
+						"          SalesPerson as string,",
+						"          EmailAddress as string,",
+						"          Phone as string,",
+						"          PasswordHash as string,",
+						"          PasswordSalt as string,",
+						"          rowguid as string,",
+						"          ModifiedDate as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> CustomerStreamIn",
+						"SalesOrderStreamIn, CustomerStreamIn lookup(SalesOrderStreamIn@CustomerID == CustomerStreamIn@CustomerID,",
+						"     multiple: true,",
+						"     broadcast: 'auto')~> OrderLookup",
+						"OrderLookup select(mapColumn(",
+						"          SalesOrderID,",
+						"          OrderDate,",
+						"          Status,",
+						"          SalesOrderNumber,",
+						"          PurchaseOrderNumber,",
+						"          AccountNumber,",
+						"          CustomerID = SalesOrderStreamIn@CustomerID,",
+						"          SubTotal,",
+						"          TaxAmt,",
+						"          Freight,",
+						"          TotalDue,",
+						"          CustomerID = CustomerStreamIn@CustomerID,",
+						"          NameStyle,",
+						"          Title,",
+						"          FirstName,",
+						"          MiddleName,",
+						"          LastName,",
+						"          CompanyName,",
+						"          SalesPerson,",
+						"          EmailAddress,",
+						"          Phone",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> OrderSelect",
+						"OrderSelect sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          ProductID as string,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as string,",
+						"          ListPrice as string,",
+						"          Size as string,",
+						"          Weight as string,",
+						"          ProductCategoryID as string,",
+						"          ProductModelID as string,",
+						"          SellStartDate as string,",
+						"          SellEndDate as string,",
+						"          DiscontinuedDate as string,",
+						"          ThumbNailPhoto as string,",
+						"          ThumbnailPhotoFileName as string,",
+						"          rowguid as string,",
+						"          ModifiedDate as string",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          each(match(/* All input columns */true()),",
+						"               /* Input name */$$ = $$)",
+						"     )) ~> SalesOrderOut"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Flipkart ETL Flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "FlipkartData",
+								"type": "DatasetReference"
+							},
+							"name": "DataStreamIn"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "FlipkartETL",
+								"type": "DatasetReference"
+							},
+							"name": "DataStreamOut"
+						}
+					],
+					"transformations": [
+						{
+							"name": "FilterData"
+						},
+						{
+							"name": "DerivedColumn"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id as string,",
+						"          title as string,",
+						"          Rating as string,",
+						"          maincateg as string,",
+						"          platform as string,",
+						"          actprice1 as string,",
+						"          norating1 as integer,",
+						"          noreviews1 as integer,",
+						"          star_5f as string,",
+						"          star_4f as string,",
+						"          star_3f as string,",
+						"          star_2f as string,",
+						"          star_1f as string,",
+						"          fulfilled1 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> DataStreamIn",
+						"DataStreamIn filter(norating1<10 || noreviews1<10) ~> FilterData",
+						"FilterData derive(positive_review_ratio = (toFloat(star_5f))/(toFloat(norating1)),",
+						"          total_stars = toDouble(star_1f)+toDouble(star_2f)+toDouble(star_3f)+toDouble(star_4f)+toDouble(star_5f)) ~> DerivedColumn",
+						"DerivedColumn sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> DataStreamOut"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/MoviesFlow')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -295,6 +511,89 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/MovieDB DataFlow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText4",
+								"type": "DatasetReference"
+							},
+							"name": "MoviesStreamIn"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText5",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "RatingsFilter"
+						},
+						{
+							"name": "SelectColumns"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          movie as string,",
+						"          title as string,",
+						"          genres as string,",
+						"          year as string,",
+						"          Rating as float,",
+						"          {Rotton Tomato} as float",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> MoviesStreamIn",
+						"MoviesStreamIn filter(Rating>=7 && {Rotton Tomato}>=60) ~> RatingsFilter",
+						"RatingsFilter select(mapColumn(",
+						"          title,",
+						"          genres,",
+						"          year,",
+						"          Rating,",
+						"          {Rotton Tomato}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectColumns",
+						"SelectColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          ProductID as string,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as string,",
+						"          ListPrice as string,",
+						"          Size as string,",
+						"          Weight as string,",
+						"          ProductCategoryID as string,",
+						"          ProductModelID as string,",
+						"          SellStartDate as string,",
+						"          SellEndDate as string,",
+						"          DiscontinuedDate as string,",
+						"          ThumbNailPhoto as string,",
+						"          ThumbnailPhotoFileName as string,",
+						"          rowguid as string,",
+						"          ModifiedDate as string",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/11 ADBWorks Lookup Pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -337,7 +636,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/AdventureWorksSalesFlow')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/4 DataFlow ProductMarkup Pipeline')]",
@@ -628,7 +929,55 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Flipkart ETL Flow')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Azure Movie Flow Pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MoviesDB Flow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MovieDB DataFlow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"MoviesStreamIn": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/MovieDB DataFlow')]"
+			]
 		}
 	]
 }

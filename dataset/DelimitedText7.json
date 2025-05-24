@@ -18,6 +18,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().fileType",
+					"type": "Expression"
+				},
 				"fileSystem": {
 					"value": "@dataset().sinkPath",
 					"type": "Expression"

@@ -18,8 +18,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "adfpipeline.csv",
-				"fileSystem": "raw-zone"
+				"fileSystem": {
+					"value": "@dataset().sinkPath",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

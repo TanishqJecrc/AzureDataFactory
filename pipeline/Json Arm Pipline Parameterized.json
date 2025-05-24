@@ -17,7 +17,25 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DataFlow",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source1": {
+								"sourcePath": {
+									"value": "@pipeline().parameters.sourcePath",
+									"type": "Expression"
+								}
+							},
+							"sink1": {
+								"fileType": {
+									"value": "@pipeline().parameters.fileType",
+									"type": "Expression"
+								},
+								"sinkPath": {
+									"value": "@pipeline().parameters.sinkPath",
+									"type": "Expression"
+								}
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,

@@ -15,8 +15,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "sample.csv",
-				"fileSystem": "raw-zone"
+				"fileSystem": {
+					"value": "@dataset().sourcePath",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

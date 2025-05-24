@@ -29,13 +29,16 @@
 		],
 		"parameters": {
 			"sourcePath": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "raw-Zone"
 			},
 			"sinkPath": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "raw-Zone"
 			},
 			"fileType": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "csv"
 			}
 		},
 		"annotations": []
